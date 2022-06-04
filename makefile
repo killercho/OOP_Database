@@ -7,7 +7,7 @@ BIN := bin
 MAIN := main
 
 # Filters all the cpp files to be compiled in the compile section.
-MAIN_FILES = $(filter-out $(SRC)/$(TEST).cpp, $(wildcard $(SRC)/*.cpp))
+MAIN_FILES = $(wildcard $(SRC)/*.cpp)
 
 # Invokes the 'compile' function and runs the programme.
 run: compile
