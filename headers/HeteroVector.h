@@ -1,13 +1,14 @@
-#ifndef VECTOR_H
-#define VECTOR_H
+#ifndef HETEROVECTOR_H
+#define HETEROVECTOR_H
 
 #include <cstring>
 
 /**
- * Template Vector class.
+ * Template Vector class for heterogeneous container.
+ * Main difference with the basic vector is that this container uses cloning of objects when copying.
  * */
 template <typename T>
-class Vector {
+class HeteroVector {
 private:
     T** arr;
     size_t capacity;
@@ -20,10 +21,10 @@ private:
     void resize();
 
 public:
-    Vector();
-    Vector(const Vector& other);
-    Vector<T>& operator=(const Vector<T>& other);
-    ~Vector();
+    HeteroVector();
+    HeteroVector(const HeteroVector& other);
+    HeteroVector<T>& operator=(const HeteroVector<T>& other);
+    ~HeteroVector();
 
     void push(const T& element);
     void pop();
@@ -35,7 +36,7 @@ public:
 };
 
 template <typename T>
-void Vector<T>::copy(const T** arr, size_t capacity, size_t currentSize)
+void HeteroVector<T>::copy(const T** arr, size_t capacity, size_t currentSize)
 {
     this->capacity = capacity;
     this->currentSize = currentSize;
@@ -45,12 +46,12 @@ void Vector<T>::copy(const T** arr, size_t capacity, size_t currentSize)
         this->arr[i] = new T;
     }
     for (size_t i = 0; i < currentSize; ++i) {
-        *this->arr[i] = *arr[i];
+        this->arr[i] = arr[i]->clone();
     }
 }
 
 template <typename T>
-void Vector<T>::deleteMem()
+void HeteroVector<T>::deleteMem()
 {
     for (size_t i = 0; i < capacity; ++i) {
         delete arr[i];
@@ -61,7 +62,7 @@ void Vector<T>::deleteMem()
 }
 
 template <typename T>
-void Vector<T>::resize()
+void HeteroVector<T>::resize()
 {
     capacity *= 2;
     T** tmp = new T*[capacity];
@@ -69,7 +70,7 @@ void Vector<T>::resize()
         tmp[i] = new T;
     }
     for (size_t i = 0; i < currentSize; ++i) {
-        *tmp[i] = *arr[i];
+        tmp[i] = arr[i]->clone();
         delete arr[i];
     }
     delete[] arr;
@@ -78,7 +79,7 @@ void Vector<T>::resize()
 }
 
 template <typename T>
-Vector<T>::Vector()
+HeteroVector<T>::HeteroVector()
 {
     capacity = DEFAULT_STARTING_CAPACITY;
     currentSize = 0;
@@ -89,13 +90,13 @@ Vector<T>::Vector()
 }
 
 template <typename T>
-Vector<T>::Vector(const Vector<T>& other)
+HeteroVector<T>::HeteroVector(const HeteroVector<T>& other)
 {
     copy(other.arr, other.capacity, other.currentSize);
 }
 
 template <typename T>
-Vector<T>& Vector<T>::operator=(const Vector<T>& other)
+HeteroVector<T>& HeteroVector<T>::operator=(const HeteroVector<T>& other)
 {
     if (this != &other) {
         deleteMem();
@@ -105,33 +106,33 @@ Vector<T>& Vector<T>::operator=(const Vector<T>& other)
 }
 
 template <typename T>
-Vector<T>::~Vector()
+HeteroVector<T>::~HeteroVector()
 {
     deleteMem();
 }
 
 template <typename T>
-void Vector<T>::push(const T& element)
+void HeteroVector<T>::push(const T& element)
 {
     if (currentSize == capacity)
         resize();
-    *arr[currentSize++] = element;
+    arr[currentSize++] = element.clone();
 }
 
 template <typename T>
-void Vector<T>::pop()
+void HeteroVector<T>::pop()
 {
     currentSize--;
 }
 
 template <typename T>
-size_t Vector<T>::getSize() const
+size_t HeteroVector<T>::getSize() const
 {
     return currentSize;
 }
 
 template <typename T>
-const T& Vector<T>::operator[](size_t index) const
+const T& HeteroVector<T>::operator[](size_t index) const
 {
     if (index > currentSize)
         throw "Index out of bounds!";
@@ -139,7 +140,7 @@ const T& Vector<T>::operator[](size_t index) const
 }
 
 template <typename T>
-T& Vector<T>::operator[](size_t index)
+T& HeteroVector<T>::operator[](size_t index)
 {
     if (index > currentSize)
         throw "Index out of bounds!";
