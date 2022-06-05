@@ -1,0 +1,17 @@
+#ifndef COLUMN_H
+#define COLUMN_H
+
+#include "Cell.h"
+#include "HeteroVector.h"
+#include "String.h"
+
+class Column {
+private:
+    HeteroVector<Cell> cells;
+    Cell::CellType typeColumn; //!< Used to identify the type of cells in the column: 0 is NULL, 1 is INT, 2 is DOUBLE, 3 is STRING.
+
+public:
+    void addCell(Cell::CellType type, String data);
+};
+
+#endif
