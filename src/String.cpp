@@ -1,4 +1,5 @@
 #include "../headers/String.h"
+#include <cstdlib>
 #include <cstring>
 
 void String::copy(const char* str)
@@ -94,10 +95,11 @@ std::ostream& operator<<(std::ostream& os, const String& other)
 
 std::istream& operator>>(std::istream& is, String& other)
 {
-    other.deleteMem();
-    is.read((char*)&other.size, sizeof(other.size));
-    is.read(other.str, other.size);
-
+    // other.deleteMem();
+    // is.read((char*)&other.size, sizeof(other.size));
+    // is.read(other.str, other.size);
+    is >> other.str;
+    other.size = strlen(other.str) + 1;
     return is;
 }
 
@@ -109,4 +111,91 @@ size_t String::getSize() const
 const char* String::getStr() const
 {
     return str;
+}
+
+bool isNumber(char c)
+{
+    return (c >= '0' && c <= '9');
+}
+
+bool isSign(char c)
+{
+    return (c == '+' || c == '-');
+}
+
+bool isADot(char c)
+{
+    return (c == '.');
+}
+
+bool String::isIntNumber() const
+{
+    if (!isSign(str[0]) && !isNumber(str[0]))
+        return false;
+
+    for (size_t i = 1; i < size - 1; ++i) {
+        if (!isNumber(str[i]))
+            return false;
+    }
+    return true;
+}
+
+bool String::isDoubleNumber() const
+{
+    bool hasDot = false;
+    if (!isSign(str[0]) && !isNumber(str[0]))
+        return false;
+
+    for (size_t i = 1; i < size - 1; ++i) {
+        if (isADot(str[i])) {
+            if (hasDot)
+                return false;
+            else
+                hasDot = true;
+        } else if (!isNumber(str[i]))
+            return false;
+    }
+    return true;
+}
+
+int String::parseToInt() const
+{
+    if (!isIntNumber() && !isDoubleNumber())
+        return 0;
+
+    return atoi(str);
+}
+
+int pow(int number, int power)
+{
+    int result = 1;
+    for (int i = 0; i < power; ++i) {
+        result *= number;
+    }
+    return result;
+}
+
+double String::parseToDouble() const
+{
+    if (!isIntNumber() && !isDoubleNumber())
+        return 0;
+
+    bool hasSign = isSign(str[0]);
+    int holePart = atoi(str);
+    double doublePart = 0.0;
+    int afterDotSymbols = 0;
+
+    int dotIndex = 0;
+    for (size_t i = 0; i < size; ++i) {
+        if (isADot(str[i])) {
+            dotIndex = i;
+            break;
+        }
+    }
+    if (dotIndex != 0) {
+        afterDotSymbols = size - dotIndex - 2;
+        doublePart = atoi(str + dotIndex + 1);
+    }
+
+    return holePart + (doublePart / pow(10, afterDotSymbols)) * (hasSign ? -1 : 1);
 }

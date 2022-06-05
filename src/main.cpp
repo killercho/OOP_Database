@@ -1,9 +1,10 @@
-#include "../headers/HeteroVector.h"
 #include "../headers/String.h"
-#include "../headers/Vector.h"
 #include <iostream>
 
 int main()
 {
-    std::cout << "Success!";
+    String test;
+    std::cout << "Enter now: ";
+    std::cin >> test;
+    std::cout << test.parseToDouble() << " Success!";
 }
