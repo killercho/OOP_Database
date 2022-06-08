@@ -1,5 +1,5 @@
 #include "../headers/Column.h"
 
-void Column::addCell()
+void Column::addCell(Cell::CellType type, String data)
 {
 }

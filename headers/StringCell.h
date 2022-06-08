@@ -9,7 +9,7 @@ private:
     String data;
 
 public:
-    StringCell(String data);
+    StringCell(class String data);
     virtual void read(std::istream& is);
     virtual void write(std::ostream& os) const;
 };

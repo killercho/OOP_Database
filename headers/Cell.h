@@ -11,10 +11,10 @@ public:
     virtual void write(std::ostream& os) const = 0;
 
     enum CellType {
-        Null,
-        Int,
-        Double,
-        String
+        NULL_VALUE,
+        INT,
+        DOUBLE,
+        STRING
     };
 };
 
