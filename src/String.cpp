@@ -197,5 +197,5 @@ double String::parseToDouble() const
         doublePart = atoi(str + dotIndex + 1);
     }
 
-    return holePart + (doublePart / pow(10, afterDotSymbols)) * (hasSign ? -1 : 1);
+    return holePart + (doublePart / pow(10, afterDotSymbols + 1)) * (hasSign ? -1 : 1);
 }
