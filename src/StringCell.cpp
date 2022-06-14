@@ -14,3 +14,8 @@ void StringCell::write(std::ostream& os) const
 {
     os << data;
 }
+
+Cell* StringCell::clone() const
+{
+    return new StringCell(*this);
+}

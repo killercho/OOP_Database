@@ -14,3 +14,8 @@ void DoubleCell::write(std::ostream& os) const
 {
     os << data;
 }
+
+Cell* DoubleCell::clone() const
+{
+    return new DoubleCell(*this);
+}

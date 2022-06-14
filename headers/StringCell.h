@@ -10,8 +10,10 @@ private:
 
 public:
     StringCell(class String data);
-    virtual void read(std::istream& is);
-    virtual void write(std::ostream& os) const;
+    virtual void read(std::istream& is) override;
+    virtual void write(std::ostream& os) const override;
+
+    virtual Cell* clone() const override;
 };
 
 #endif

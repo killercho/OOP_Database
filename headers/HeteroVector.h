@@ -26,7 +26,7 @@ public:
     HeteroVector<T>& operator=(const HeteroVector<T>& other);
     ~HeteroVector();
 
-    void push(const T& element);
+    void push(const T* element);
     void pop();
 
     size_t getSize() const;
@@ -42,9 +42,6 @@ void HeteroVector<T>::copy(const T** arr, size_t capacity, size_t currentSize)
     this->currentSize = currentSize;
 
     this->arr = new T*[capacity];
-    for (size_t i = 0; i < capacity; ++i) {
-        this->arr[i] = new T;
-    }
     for (size_t i = 0; i < currentSize; ++i) {
         this->arr[i] = arr[i]->clone();
     }
@@ -66,9 +63,6 @@ void HeteroVector<T>::resize()
 {
     capacity *= 2;
     T** tmp = new T*[capacity];
-    for (size_t i = 0; i < capacity; ++i) {
-        tmp[i] = new T;
-    }
     for (size_t i = 0; i < currentSize; ++i) {
         tmp[i] = arr[i]->clone();
         delete arr[i];
@@ -84,9 +78,6 @@ HeteroVector<T>::HeteroVector()
     capacity = DEFAULT_STARTING_CAPACITY;
     currentSize = 0;
     arr = new T*[DEFAULT_STARTING_CAPACITY];
-    for (size_t i = 0; i < capacity; ++i) {
-        arr[i] = new T;
-    }
 }
 
 template <typename T>
@@ -112,11 +103,11 @@ HeteroVector<T>::~HeteroVector()
 }
 
 template <typename T>
-void HeteroVector<T>::push(const T& element)
+void HeteroVector<T>::push(const T* element)
 {
     if (currentSize == capacity)
         resize();
-    arr[currentSize++] = element.clone();
+    arr[currentSize++] = element->clone();
 }
 
 template <typename T>
