@@ -84,23 +84,23 @@ String operator+(const String& first, const String& second)
     return newString;
 }
 
-std::ostream& operator<<(std::ostream& os, const String& other)
+void String::writeBinary(std::ostream& os) const
 {
-    // os.write((const char*)&other.size, sizeof(other.size));
-    // os.write(other.str, other.size);
-
-    os << other.str;
-    return os;
+    os.write((const char*)&size, sizeof(size));
+    os.write(str, size);
 }
 
-std::istream& operator>>(std::istream& is, String& other)
+void String::readBinary(std::istream& is)
 {
-    // other.deleteMem();
-    // is.read((char*)&other.size, sizeof(other.size));
-    // is.read(other.str, other.size);
-    is >> other.str;
-    other.size = strlen(other.str) + 1;
-    return is;
+    deleteMem();
+    is.read((char*)&size, sizeof(size));
+    is.read(str, size);
+}
+
+void String::write(std::ostream& os) const
+{
+
+    os << str;
 }
 
 size_t String::getSize() const

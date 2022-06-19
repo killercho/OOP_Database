@@ -39,26 +39,26 @@ const Cell& Column::getCellAt(size_t index) const
     return cells[index];
 }
 
-std::ostream& operator<<(std::ostream& os, const Column& other)
+void Column::writeBinary(std::ostream& os) const
 {
-    os << other.name << ": ";
-    for (size_t i = 0; i < other.cells.getSize(); ++i) {
-        other.cells[i].write(os);
+    cells.writeBinary(os);
+    os.write((const char*)&typeColumn, sizeof(typeColumn));
+    name.writeBinary(os);
+}
+
+void Column::readBinary(std::istream& is)
+{
+    cells.readBinary(is);
+    is.read((char*)&typeColumn, sizeof(typeColumn));
+    name.readBinary(is);
+}
+
+void Column::write(std::ostream& os) const
+{
+    name.write(os);
+    os << ": ";
+    for (size_t i = 0; i < cells.getSize(); ++i) {
+        cells[i].write(os);
         os << " ";
     }
-
-    return os;
-}
-std::istream& operator>>(std::istream& is, Column& other)
-{
-    char buffer[1024];
-    is.getline(buffer, 1024);
-    other.name = String(buffer);
-    size_t cellsSize = 0;
-    is >> cellsSize;
-    for (size_t i = 0; i < cellsSize; ++i) {
-        other.cells[i].read(is);
-    }
-
-    return is;
 }

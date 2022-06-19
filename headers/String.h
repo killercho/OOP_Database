@@ -34,8 +34,9 @@ public:
     int parseToInt() const;       //!< Parses the String to an int value if that's possible. Uses the 'atoi' function and cuts off the double part if the number is a double.
     double parseToDouble() const; //!< Parses the String to a double value if that's possible.
 
-    friend std::ostream& operator<<(std::ostream& os, const String& other);
-    friend std::istream& operator>>(std::istream& is, String& other);
+    void writeBinary(std::ostream& os) const;
+    void readBinary(std::istream& is);
+    void write(std::ostream& os) const;
 };
 
 String operator+(const String& first, const String& second); //!< Operator, used to concat two Strings. Returns a new String as a result from concatenating the first and the second.

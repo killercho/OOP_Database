@@ -2,6 +2,7 @@
 #define HETEROVECTOR_H
 
 #include <cstring>
+#include <iostream>
 
 /**
  * Template Vector class for heterogeneous container.
@@ -16,7 +17,7 @@ private:
 
     static const short DEFAULT_STARTING_CAPACITY = 1;
 
-    void copy(const T** arr, const size_t capacity, const size_t currentSize);
+    void copy(const T* const* arr, const size_t capacity, const size_t currentSize);
     void deleteMem();
     void resize();
 
@@ -33,10 +34,14 @@ public:
 
     const T& operator[](size_t index) const; //!< Used to get a value in the array on a specific position in the array without the oprion of changing it.
     T& operator[](size_t index);             //!< Used to get a value in the array on a specific position with the option of changing that value.
+
+    void writeBinary(std::ostream& os) const;
+    void readBinary(std::istream& is);
+    void write(std::ostream& os) const;
 };
 
 template <typename T>
-void HeteroVector<T>::copy(const T** arr, size_t capacity, size_t currentSize)
+void HeteroVector<T>::copy(const T* const* arr, size_t capacity, size_t currentSize)
 {
     this->capacity = capacity;
     this->currentSize = currentSize;
@@ -50,7 +55,7 @@ void HeteroVector<T>::copy(const T** arr, size_t capacity, size_t currentSize)
 template <typename T>
 void HeteroVector<T>::deleteMem()
 {
-    for (size_t i = 0; i < capacity; ++i) {
+    for (size_t i = 0; i < currentSize; ++i) {
         delete arr[i];
     }
     delete[] arr;
@@ -136,6 +141,39 @@ T& HeteroVector<T>::operator[](size_t index)
     if (index > currentSize)
         throw "Index out of bounds!";
     return *arr[index];
+}
+
+template <typename T>
+void HeteroVector<T>::writeBinary(std::ostream& os) const
+{
+    os.write((const char*)&currentSize, sizeof(size_t));
+    os.write((const char*)&capacity, sizeof(size_t));
+    for (size_t i = 0; i < currentSize; ++i) {
+        os.write((const char*)arr[i], sizeof(T));
+    }
+}
+
+template <typename T>
+void HeteroVector<T>::readBinary(std::istream& is)
+{
+    deleteMem();
+    is.read((char*)&currentSize, sizeof(size_t));
+    is.read((char*)&capacity, sizeof(size_t));
+    arr = new T*[capacity];
+    for (size_t i = 0; i < currentSize; ++i) {
+        is.read((char*)arr[i], sizeof(T));
+    }
+}
+
+template <typename T>
+void HeteroVector<T>::write(std::ostream& os) const
+{
+    os << "Count: " << currentSize;
+    os << " Capacity: " << capacity;
+    os << "Elements: ";
+    for (size_t i = 0; i < currentSize; ++i) {
+        os << *arr[i];
+    }
 }
 
 #endif

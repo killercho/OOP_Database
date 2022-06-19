@@ -2,6 +2,7 @@
 #define VECTOR_H
 
 #include <cstring>
+#include <iostream>
 
 /**
  * Template Vector class.
@@ -32,6 +33,10 @@ public:
 
     const T& operator[](size_t index) const; //!< Used to get a value in the array on a specific position in the array without the oprion of changing it.
     T& operator[](size_t index);             //!< Used to get a value in the array on a specific position with the option of changing that value.
+
+    void writeBinary(std::ostream& os) const;
+    void readBinary(std::istream& is);
+    void write(std::ostream& os) const;
 };
 
 template <typename T>
@@ -41,18 +46,15 @@ void Vector<T>::copy(const T** arr, size_t capacity, size_t currentSize)
     this->currentSize = currentSize;
 
     this->arr = new T*[capacity];
-    for (size_t i = 0; i < capacity; ++i) {
-        this->arr[i] = new T;
-    }
     for (size_t i = 0; i < currentSize; ++i) {
-        *this->arr[i] = *arr[i];
+        this->arr[i] = new T(*arr[i]);
     }
 }
 
 template <typename T>
 void Vector<T>::deleteMem()
 {
-    for (size_t i = 0; i < capacity; ++i) {
+    for (size_t i = 0; i < currentSize; ++i) {
         delete arr[i];
     }
     delete[] arr;
@@ -65,11 +67,8 @@ void Vector<T>::resize()
 {
     capacity *= 2;
     T** tmp = new T*[capacity];
-    for (size_t i = 0; i < capacity; ++i) {
-        tmp[i] = new T;
-    }
     for (size_t i = 0; i < currentSize; ++i) {
-        *tmp[i] = *arr[i];
+        tmp[i] = new T(*arr[i]);
         delete arr[i];
     }
     delete[] arr;
@@ -83,9 +82,6 @@ Vector<T>::Vector()
     capacity = DEFAULT_STARTING_CAPACITY;
     currentSize = 0;
     arr = new T*[DEFAULT_STARTING_CAPACITY];
-    for (size_t i = 0; i < capacity; ++i) {
-        arr[i] = new T;
-    }
 }
 
 template <typename T>
@@ -115,7 +111,7 @@ void Vector<T>::push(const T& element)
 {
     if (currentSize == capacity)
         resize();
-    *arr[currentSize++] = element;
+    arr[currentSize++] = new T(element);
 }
 
 template <typename T>
@@ -144,6 +140,39 @@ T& Vector<T>::operator[](size_t index)
     if (index > currentSize)
         throw "Index out of bounds!";
     return *arr[index];
+}
+
+template <typename T>
+void Vector<T>::writeBinary(std::ostream& os) const
+{
+    os.write((const char*)&currentSize, sizeof(size_t));
+    os.write((const char*)&capacity, sizeof(size_t));
+    for (size_t i = 0; i < currentSize; ++i) {
+        os.write((char*)arr[i], sizeof(T));
+    }
+}
+
+template <typename T>
+void Vector<T>::readBinary(std::istream& is)
+{
+    deleteMem();
+    is.read((char*)&currentSize, sizeof(size_t));
+    is.read((char*)&capacity, sizeof(size_t));
+    arr = new T*[capacity];
+    for (size_t i = 0; i < currentSize; ++i) {
+        is.read((char*)arr[i], sizeof(T));
+    }
+}
+
+template <typename T>
+void Vector<T>::write(std::ostream& os) const
+{
+    os << "Count: " << currentSize;
+    os << " Capacity: " << capacity;
+    os << "Elements: ";
+    for (size_t i = 0; i < currentSize; ++i) {
+        os << *arr[i];
+    }
 }
 
 #endif

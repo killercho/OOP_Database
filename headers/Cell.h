@@ -7,7 +7,8 @@ class Cell {
 public:
     virtual ~Cell() = default;
 
-    virtual void read(std::istream& is) = 0;
+    virtual void readBinary(std::istream& is) = 0;
+    virtual void writeBinary(std::ostream& os) const = 0;
     virtual void write(std::ostream& os) const = 0;
 
     virtual Cell* clone() const = 0;

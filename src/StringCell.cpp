@@ -5,14 +5,19 @@ StringCell::StringCell(String data)
     this->data = data;
 }
 
-void StringCell::read(std::istream& is)
+void StringCell::readBinary(std::istream& is)
 {
-    is >> data;
+    data.readBinary(is);
+}
+
+void StringCell::writeBinary(std::ostream& os) const
+{
+    data.writeBinary(os);
 }
 
 void StringCell::write(std::ostream& os) const
 {
-    os << data;
+    data.write(os);
 }
 
 Cell* StringCell::clone() const
