@@ -54,12 +54,12 @@ void Vector<T>::copy(const T** arr, size_t capacity, size_t currentSize)
 template <typename T>
 void Vector<T>::deleteMem()
 {
-    for (size_t i = 0; i < currentSize; ++i) {
+    for (size_t i = 0; i < capacity; ++i) {
         delete arr[i];
     }
     delete[] arr;
     currentSize = 0;
-    capacity = 0;
+    capacity = 1;
 }
 
 template <typename T>
@@ -160,18 +160,18 @@ void Vector<T>::readBinary(std::istream& is)
     is.read((char*)&capacity, sizeof(size_t));
     arr = new T*[capacity];
     for (size_t i = 0; i < currentSize; ++i) {
-        is.read((char*)arr[i], sizeof(T));
+        arr[i]->readBinary(is);
     }
 }
 
 template <typename T>
 void Vector<T>::write(std::ostream& os) const
 {
-    os << "Count: " << currentSize;
+    os << " Count: " << currentSize;
     os << " Capacity: " << capacity;
-    os << "Elements: ";
+    os << " Elements: ";
     for (size_t i = 0; i < currentSize; ++i) {
-        os << *arr[i];
+        arr[i]->write(os); // Works only with the types that have defined 'write' function...
     }
 }
 

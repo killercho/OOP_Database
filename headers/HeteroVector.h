@@ -55,12 +55,12 @@ void HeteroVector<T>::copy(const T* const* arr, size_t capacity, size_t currentS
 template <typename T>
 void HeteroVector<T>::deleteMem()
 {
-    for (size_t i = 0; i < currentSize; ++i) {
+    for (size_t i = 0; i < capacity; ++i) {
         delete arr[i];
     }
     delete[] arr;
     currentSize = 0;
-    capacity = 0;
+    capacity = 1;
 }
 
 template <typename T>

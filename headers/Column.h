@@ -18,9 +18,6 @@ public:
     const String& getName() const;
     const Cell& getCellAt(size_t index) const;
 
-    friend std::ostream& operator<<(std::ostream& os, const Column& other);
-    friend std::istream& operator>>(std::istream& is, Column& other);
-
     void writeBinary(std::ostream& os) const;
     void readBinary(std::istream& is);
     void write(std::ostream& os) const;

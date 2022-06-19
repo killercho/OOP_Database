@@ -1,1 +1,2 @@
 Check if the HeteroVector and the Vector have an issue with reading and writing in binary and in text.
+Fix issue with the Vector reading from a file. -> Possible problem - individual cell's behaviour, needs checking.

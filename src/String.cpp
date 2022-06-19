@@ -94,12 +94,12 @@ void String::readBinary(std::istream& is)
 {
     deleteMem();
     is.read((char*)&size, sizeof(size));
+    str = new char[size + 1];
     is.read(str, size);
 }
 
 void String::write(std::ostream& os) const
 {
-
     os << str;
 }
 
