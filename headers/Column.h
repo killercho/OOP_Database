@@ -18,6 +18,11 @@ public:
     const String& getName() const;
     const Cell& getCellAt(size_t index) const;
 
+    Cell::CellType getColumnType() const
+    {
+        return typeColumn;
+    }
+
     void writeBinary(std::ostream& os) const;
     void readBinary(std::istream& is);
     void write(std::ostream& os) const;

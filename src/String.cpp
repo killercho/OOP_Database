@@ -9,6 +9,26 @@ void String::copy(const char* str)
     strcpy(this->str, str);
 }
 
+Vector<String> String::splitStringBy(char c) const
+{
+    Vector<String> separatedStrings;
+    size_t lastWordIndex = 0;
+    for (size_t i = 0; i < size; ++i) {
+        if (str[i] == c || i == size - 1) {
+            char* newWord = new char[i];
+            size_t k = 0;
+            for (size_t j = lastWordIndex; j < i; ++j) {
+                newWord[k++] = str[j];
+            }
+            lastWordIndex = i + 1;
+            String newString = newWord;
+            delete[] newWord;
+            separatedStrings.push(newString);
+        }
+    }
+    return separatedStrings;
+}
+
 void String::deleteMem()
 {
     delete[] str;

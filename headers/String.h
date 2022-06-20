@@ -1,6 +1,7 @@
 #ifndef STRING_H
 #define STRING_H
 
+#include "Vector.h"
 #include <iostream>
 
 /**
@@ -33,6 +34,8 @@ public:
     bool isDoubleNumber() const;  //!< Bool function used when determining if the String is actually a double.
     int parseToInt() const;       //!< Parses the String to an int value if that's possible. Uses the 'atoi' function and cuts off the double part if the number is a double.
     double parseToDouble() const; //!< Parses the String to a double value if that's possible.
+
+    Vector<String> splitStringBy(char c) const;
 
     void writeBinary(std::ostream& os) const;
     void readBinary(std::istream& is);

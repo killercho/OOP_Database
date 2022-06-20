@@ -7,7 +7,7 @@ BIN := bin
 MAIN := main
 
 # Filters all the cpp files to be compiled in the compile section.
-MAIN_FILES = $(wildcard $(SRC)/*.cpp)
+MAIN_FILES = $(SRC)/*.cpp
 
 # Invokes the 'compile' function and runs the programme.
 run: compile

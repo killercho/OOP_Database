@@ -12,16 +12,13 @@
 
 int main()
 {
-    String fileName("./testFiles/testing.bin");
-    Vector<IntCell> test;
-    std::ifstream file(fileName.getStr());
-    if (file.is_open())
-        std::cout << "The file is open for bussiness!\n";
+    String someString("abc bum.opa filename!");
 
-    test.readBinary(file);
-    std::cout << test.getSize();
-    test.write(std::cout);
+    Vector<String> separatedStrings = someString.splitStringBy(' ');
+
+    for (size_t i = 0; i < separatedStrings.getSize(); ++i) {
+        std::cout << separatedStrings[i].getStr();
+    }
 
     std::cout << "\nSuccess!";
-    file.close();
 }

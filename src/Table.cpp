@@ -1,4 +1,6 @@
 #include "../headers/Table.h"
+#include <fstream>
+#include <iostream>
 
 Table::Table(const String& tableName, const String& filename)
     : tableName(tableName)
@@ -15,18 +17,48 @@ void Table::addRow(const String& data)
 {
 }
 
-void Table::writeBinary(std::ostream& os) const
+void Table::printColumns() const
 {
-    columns.writeBinary(os);
-    tableName.writeBinary(os);
-    fileName.writeBinary(os);
+    for (size_t i = 0; i < columns.getSize(); ++i) {
+        columns[i].write(std::cout);
+    }
 }
 
-void Table::readBinary(std::istream& is)
+void Table::changeName(const String& newName)
 {
-    columns.readBinary(is);
-    tableName.readBinary(is);
+    tableName = newName;
+}
+
+void Table::describeColumns() const
+{
+    for (size_t i = 0; i < columns.getSize(); ++i) {
+        std::cout << columns[i].getColumnType() << ", ";
+    }
+    std::cout << '\n';
+}
+
+void Table::saveTable() const
+{
+    std::ofstream file(fileName.getStr(), std::ios::binary);
+    if (!file.is_open())
+        throw "File failed to open!";
+    writeBinary(file);
+    file.close();
+}
+
+void Table::writeBinary(std::ostream& os) const
+{
+    tableName.writeBinary(os);
+    fileName.writeBinary(os);
+    columns.writeBinary(os);
+}
+
+void Table::readBinary(std::istream& is, bool hasName)
+{
+    if (!hasName)
+        tableName.readBinary(is);
     fileName.readBinary(is);
+    columns.readBinary(is);
 }
 
 void Table::write(std::ostream& os) const

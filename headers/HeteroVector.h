@@ -146,22 +146,22 @@ T& HeteroVector<T>::operator[](size_t index)
 template <typename T>
 void HeteroVector<T>::writeBinary(std::ostream& os) const
 {
-    os.write((const char*)&currentSize, sizeof(size_t));
-    os.write((const char*)&capacity, sizeof(size_t));
+    os.write((const char*)&currentSize, sizeof(currentSize));
+    os.write((const char*)&capacity, sizeof(capacity));
     for (size_t i = 0; i < currentSize; ++i) {
-        os.write((const char*)arr[i], sizeof(T));
+        arr[i]->writeBinary(os);
     }
 }
 
 template <typename T>
 void HeteroVector<T>::readBinary(std::istream& is)
 {
-    deleteMem();
-    is.read((char*)&currentSize, sizeof(size_t));
-    is.read((char*)&capacity, sizeof(size_t));
+    // deleteMem();
+    is.read((char*)&currentSize, sizeof(currentSize));
+    is.read((char*)&capacity, sizeof(capacity));
     arr = new T*[capacity];
     for (size_t i = 0; i < currentSize; ++i) {
-        is.read((char*)arr[i], sizeof(T));
+        // arr[i]->readBinary(is); //TODO: Doesn't work properly. No idea why...
     }
 }
 
@@ -172,7 +172,7 @@ void HeteroVector<T>::write(std::ostream& os) const
     os << " Capacity: " << capacity;
     os << "Elements: ";
     for (size_t i = 0; i < currentSize; ++i) {
-        os << *arr[i];
+        arr[i]->write(os);
     }
 }
 

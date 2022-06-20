@@ -16,7 +16,7 @@ private:
 
     static const short DEFAULT_STARTING_CAPACITY = 1;
 
-    void copy(const T** arr, const size_t capacity, const size_t currentSize);
+    void copy(const T* const* arr, const size_t capacity, const size_t currentSize);
     void deleteMem();
     void resize();
 
@@ -40,7 +40,7 @@ public:
 };
 
 template <typename T>
-void Vector<T>::copy(const T** arr, size_t capacity, size_t currentSize)
+void Vector<T>::copy(const T* const* arr, size_t capacity, size_t currentSize)
 {
     this->capacity = capacity;
     this->currentSize = currentSize;
@@ -148,19 +148,19 @@ void Vector<T>::writeBinary(std::ostream& os) const
     os.write((const char*)&currentSize, sizeof(size_t));
     os.write((const char*)&capacity, sizeof(size_t));
     for (size_t i = 0; i < currentSize; ++i) {
-        os.write((char*)arr[i], sizeof(T));
+        arr[i]->writeBinary(os);
     }
 }
 
 template <typename T>
 void Vector<T>::readBinary(std::istream& is)
 {
-    deleteMem();
+    // deleteMem();
     is.read((char*)&currentSize, sizeof(size_t));
     is.read((char*)&capacity, sizeof(size_t));
     arr = new T*[capacity];
     for (size_t i = 0; i < currentSize; ++i) {
-        arr[i]->readBinary(is);
+        // arr[i]->readBinary(is); //TODO: Doesn't work. Same reason as the HeteroVector function.
     }
 }
 
@@ -171,7 +171,7 @@ void Vector<T>::write(std::ostream& os) const
     os << " Capacity: " << capacity;
     os << " Elements: ";
     for (size_t i = 0; i < currentSize; ++i) {
-        arr[i]->write(os); // Works only with the types that have defined 'write' function...
+        arr[i]->write(os);
     }
 }
 
